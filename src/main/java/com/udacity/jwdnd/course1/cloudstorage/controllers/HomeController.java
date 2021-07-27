@@ -119,7 +119,8 @@ public class HomeController {
             credentialService.save(credential);
             model.addAttribute("credentials", credentialService.getCredentials());
         } else {
-            String encryptedPassword = encryptionService.encryptValue(password, credentialService.getCredential(Integer.parseInt(credentialId)).getKey());
+            String key = credentialService.getCredential(Integer.parseInt(credentialId)).getKey();
+            String encryptedPassword = encryptionService.encryptValue(password, key);
             Credential credential = new Credential(Integer.parseInt(credentialId), url, username, null, encryptedPassword, null);
             credentialService.update(credential);
         }

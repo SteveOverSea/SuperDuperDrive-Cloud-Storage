@@ -4,10 +4,9 @@ import com.udacity.jwdnd.course1.cloudstorage.mappers.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 
 @Service
 public class CredentialService {
@@ -42,7 +41,7 @@ public class CredentialService {
         SecureRandom random = new SecureRandom();
         byte[] key = new byte[16];
         random.nextBytes(key);
-        String keyString = new String(key, StandardCharsets.UTF_8);
+        String keyString = Base64.getEncoder().encodeToString(key);
         return keyString;
     }
 }
