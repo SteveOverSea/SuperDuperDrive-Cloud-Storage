@@ -15,6 +15,43 @@
                     <button type="submit" class="btn btn-secondary float-right">Logout</button>
                 </form>
             </div>
+            <div>
+                <div th:if="${param.fileUploadSuccess}" class="alert alert-dark">
+                    Upload successful!
+                </div>
+                <div th:if="${param.fileDeleteSuccess}" class="alert alert-dark">
+                    Deleted.
+                </div>
+                <div th:if="${param.fileError}" class="alert alert-danger">
+                    Error.
+                </div>
+
+                <div th:if="${param.noteCreateSuccess}" class="alert alert-dark">
+                    Note created!
+                </div>
+                <div th:if="${param.noteEditSuccess}" class="alert alert-dark">
+                    Note edited.
+                </div>
+                <div th:if="${param.noteDeleteSuccess}" class="alert alert-dark">
+                    Note deleted.
+                </div>
+                <div th:if="${param.noteError}" class="alert alert-danger">
+                    Error.
+                </div>
+
+                <div th:if="${param.credentialCreateSuccess}" class="alert alert-dark">
+                    Credential created!
+                </div>
+                <div th:if="${param.credentialEditSuccess}" class="alert alert-dark">
+                    Credential edited.
+                </div>
+                <div th:if="${param.credentialDeleteSuccess}" class="alert alert-dark">
+                    Credential deleted.
+                </div>
+                <div th:if="${param.credentialerror}" class="alert alert-danger">
+                    Error.
+                </div>
+            </div>
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">

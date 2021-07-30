@@ -9,8 +9,8 @@ import java.util.ArrayList;
 @Mapper
 public interface NoteMapper {
 
-    @Select("SELECT * FROM NOTES")
-    ArrayList<Note> getAllNotes();
+    @Select("SELECT * FROM NOTES WHERE userid=#{userid}")
+    ArrayList<Note> getAllNotes(Integer userid);
 
     @Insert("INSERT INTO NOTES (notetitle, notedescription, userid) VALUES (#{noteTitle}, #{noteDescription}, #{userId})")
     @Options(useGeneratedKeys = true, keyProperty = "noteid")

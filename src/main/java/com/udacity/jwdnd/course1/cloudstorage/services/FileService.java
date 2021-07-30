@@ -20,8 +20,8 @@ public class FileService {
         fileMapper.saveFile(file);
     }
 
-    public ArrayList<File> getAllFiles() {
-        return fileMapper.getAllFiles();
+    public ArrayList<File> getAllFiles(Integer userid) {
+        return fileMapper.getAllFiles(userid);
     }
 
     public File getFile(String filename) {
@@ -30,5 +30,9 @@ public class FileService {
 
     public void remove(String filename) {
         fileMapper.deleteFile(filename);
+    }
+
+    public boolean isDuplicate(String filename) {
+        return fileMapper.getFile(filename) != null;
     }
 }

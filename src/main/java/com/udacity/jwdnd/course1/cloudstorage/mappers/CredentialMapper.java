@@ -8,8 +8,8 @@ import java.util.ArrayList;
 @Mapper
 public interface CredentialMapper {
 
-    @Select("SELECT * FROM CREDENTIALS")
-    public ArrayList<Credential> getAll();
+    @Select("SELECT * FROM CREDENTIALS WHERE userid=#{userid}")
+    public ArrayList<Credential> getAll(Integer userid);
 
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid=#{id}")
     public Credential getCredential(Integer id);

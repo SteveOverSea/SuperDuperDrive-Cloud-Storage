@@ -38,10 +38,10 @@ public class HomeController {
     }
 
     @GetMapping()
-    public String homeView(Model model) {
-        model.addAttribute("files", fileService.getAllFiles());
-        model.addAttribute("notes", noteService.getNotes());
-        model.addAttribute("credentials", credentialService.getCredentials());
+    public String homeView(Model model, Authentication authentication) {
+        model.addAttribute("files", fileService.getAllFiles(userService.getUser(authentication.getName()).getUserId()));
+        model.addAttribute("notes", noteService.getNotes(userService.getUser(authentication.getName()).getUserId()));
+        model.addAttribute("credentials", credentialService.getCredentials(userService.getUser(authentication.getName()).getUserId()));
         model.addAttribute("encryptionService", encryptionService);
         return "home";
     }
@@ -50,21 +50,23 @@ public class HomeController {
 
     @PostMapping("/file")
     public String postFile(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model) throws IOException {
-        if (fileUpload != null) {
+        String filename = fileUpload.getOriginalFilename();
+
+        if (fileUpload != null && !fileService.isDuplicate(filename)) {
 
             Integer userId = userService.getUser(authentication.getName()).getUserId();
-            File file = new File(null, fileUpload.getOriginalFilename(), fileUpload.getContentType(), Long.toString(fileUpload.getSize()), userId, fileUpload.getBytes());
+            File file = new File(null, filename, fileUpload.getContentType(), Long.toString(fileUpload.getSize()), userId, fileUpload.getBytes());
             fileService.store(file);
-            model.addAttribute("files", fileService.getAllFiles());
+            model.addAttribute("files", fileService.getAllFiles(userId));
         }
 
-        return "home";
+        return "redirect:/home?fileUploadSuccess";
     }
 
     @GetMapping("/file/delete/{filename}")
     public String deleteFile(@PathVariable String filename) {
         fileService.remove(filename);
-        return "redirect:/home";
+        return "redirect:/home?fileDeleteSuccess";
     }
 
     // From Vijay https://knowledge.udacity.com/questions/355003
@@ -90,20 +92,22 @@ public class HomeController {
         if (noteId.length() == 0) {
             Note note = new Note(null, noteTitle, noteDescription, userService.getUser(authentication.getName()).getUserId());
             noteService.save(note);
-            model.addAttribute("notes", noteService.getNotes());
+            model.addAttribute("notes", noteService.getNotes(userService.getUser(authentication.getName()).getUserId()));
+            return "redirect:/home?noteCreateSuccess";
         } else {
             Note note = new Note(Integer.parseInt(noteId), noteTitle, noteDescription, null);
             noteService.update(note);
+            return "redirect:/home?noteEditSuccess";
         }
 
-        return "redirect:/home#nav-notes";
+
     }
 
     @GetMapping("/note/delete/{noteid}")
     public String deleteNote(@PathVariable String noteid) {
         Integer id = Integer.parseInt(noteid);
         noteService.delete(id);
-        return "redirect:/home";
+        return "redirect:/home?noteDeleteSuccess";
     }
 
     // CREDENTIAL
@@ -117,21 +121,25 @@ public class HomeController {
             String encryptedPassword = encryptionService.encryptValue(password, key);
             Credential credential = new Credential(null, url, username, key, encryptedPassword, userService.getUser(authentication.getName()).getUserId());
             credentialService.save(credential);
-            model.addAttribute("credentials", credentialService.getCredentials());
+            model.addAttribute("credentials", credentialService.getCredentials(userService.getUser(authentication.getName()).getUserId()));
+
+            return "redirect:/home?credentialCreateSuccess";
         } else {
             String key = credentialService.getCredential(Integer.parseInt(credentialId)).getKey();
             String encryptedPassword = encryptionService.encryptValue(password, key);
             Credential credential = new Credential(Integer.parseInt(credentialId), url, username, null, encryptedPassword, null);
             credentialService.update(credential);
+
+            return "redirect:/home?credentialEditSuccess";
         }
 
-        return "redirect:/home#nav-notes";
+
     }
 
     @GetMapping("/credential/delete/{credentialid}")
     public String deleteCredential(@PathVariable String credentialid) {
         Integer id = Integer.parseInt(credentialid);
         credentialService.delete(id);
-        return "redirect:/home";
+        return "redirect:/home?credentialDeleteSuccess";
     }
 }
