@@ -10,8 +10,4 @@ public class CloudStorageApplication {
 		SpringApplication.run(CloudStorageApplication.class, args);
 	}
 
-	// TODO
-	// Don't allow duplicate filename
-	// add success messages for creation ,edit ,delete
-
 }
