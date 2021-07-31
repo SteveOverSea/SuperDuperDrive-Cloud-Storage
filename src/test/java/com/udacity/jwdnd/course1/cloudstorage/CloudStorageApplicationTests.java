@@ -246,7 +246,7 @@ class CloudStorageApplicationTests {
     }
 
     public void loginUser(String username, String password) {
-        driver.get("http://localhost:" + this.port + "/login");
+        //driver.get("http://localhost:" + this.port + "/login");
 
         WebElement inputUsername = driver.findElement(By.id("inputUsername"));
         WebElement inputPassword = driver.findElement(By.id("inputPassword"));
